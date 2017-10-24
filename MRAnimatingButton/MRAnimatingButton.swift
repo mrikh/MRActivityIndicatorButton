@@ -69,7 +69,7 @@ class MRAnimatingButton: UIButton {
         
         clearTick()
         
-        animateWidth(bounds.size.height, toValue: bounds.size.width)
+        animateWidth(bounds.size.height, toValue: originalRect.width)
         frame = originalRect
         
         animateCornerRadius(layer.cornerRadius, toValue: tempCornerRadius)
