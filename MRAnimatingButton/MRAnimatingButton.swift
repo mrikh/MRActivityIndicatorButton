@@ -27,9 +27,7 @@ class MRAnimatingButton: UIButton {
     var tempCornerRadius : CGFloat!
     var originalRect : CGRect!
     var titleString : String?
-    
-    var stopRotation = false
-    
+  
     override func awakeFromNib() {
         
         super.awakeFromNib()
@@ -37,10 +35,11 @@ class MRAnimatingButton: UIButton {
 
     func startAnimating(){
         
+        isUserInteractionEnabled = false
         titleString = titleLabel?.text
         originalRect = frame
         tempCornerRadius = layer.cornerRadius
-        stopRotation = false
+
         self.setTitle("", for: .normal)
         
         animateWidth(bounds.size.width, toValue: bounds.size.height)
@@ -55,17 +54,25 @@ class MRAnimatingButton: UIButton {
         
         showTick()
         
-        DispatchQueue.main.asyncAfter(wallDeadline: .now() + 0.3) { 
+        DispatchQueue.main.asyncAfter(wallDeadline: .now() + 0.3) { [weak self] in
             
-            self.rotateInfinitely()
+            self?.rotateInfinitely()
         }
     }
     
     func stopAnimating(){
         
-        stopRotation = true
+        DispatchQueue.main.asyncAfter(wallDeadline: .now() + 0.3) { [weak self] in
+            
+            self?.stopAllLayerAnimations()
+        }
+    }
+    
+    private func stopAllLayerAnimations(){
         
-        self.layer.removeAllAnimations()
+        isUserInteractionEnabled = true
+        
+        layer.removeAllAnimations()
         
         clearTick()
         
